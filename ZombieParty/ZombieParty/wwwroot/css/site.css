@@ -79,3 +79,10 @@ body {
 label {
   font-size: 1rem;
 }
+/*CSS pour le surlignage appelée highlight */
+.highlight {
+    background: darkviolet;
+    opacity: 0.5;
+    color: white;
+}
+
