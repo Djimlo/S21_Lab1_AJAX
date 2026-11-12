@@ -115,7 +115,7 @@ namespace ZombieParty.Controllers
                     zombieVM.Zombie.Image = zombieVM.OldImage;
                 }
 
-               await _serviceZ.EditAsync(zombieVM.Zombie);
+                await _serviceZ.EditAsync(zombieVM.Zombie);
                 TempData[AppConstants.Success] = $"Zombie {zombieVM.Zombie.Name} has been modified";
                 return this.RedirectToAction("Index");
             }
@@ -136,9 +136,9 @@ namespace ZombieParty.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ZombieVM zombieVM)
         {
-            if(_serviceZ.ZombieNameExist(zombieVM.Zombie.Name))
+            if (_serviceZ.ZombieNameExist(zombieVM.Zombie.Name))
             {
-                TempData[AppConstants.Error] = $"Zombie {zombieVM.Zombie.Name} is already exist."; 
+                TempData[AppConstants.Error] = $"Zombie {zombieVM.Zombie.Name} is already exist.";
                 return View(zombieVM);
             }
 
@@ -177,5 +177,22 @@ namespace ZombieParty.Controllers
 
             return View(zombieVM);
         }
+        [HttpPost]
+        public async Task<IActionResult> Favorite(int id)
+        {
+            Zombie zombie = await _serviceZ.GetByIdAsync(id);
+
+            if (zombie == null)
+            {
+                return NotFound($"Could not find zombie with id: {id}");
+            }
+
+            zombie.IsFavorite = !zombie.IsFavorite;
+            _baseDonnees.Update(zombie);
+            await _baseDonnees.SaveChangesAsync();
+
+            return Json(zombie.IsFavorite);
+
+        }
     }
-}
+    }
